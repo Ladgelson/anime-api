@@ -1,6 +1,7 @@
 package academy.devdojo.springboot2essentials.repository;
 
 import academy.devdojo.springboot2essentials.domain.Anime;
+import academy.devdojo.springboot2essentials.util.AnimeCreator;
 import org.assertj.core.api.Assertions;
 import org.h2.command.ddl.CreateAggregate;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("save: Save anime when successful")
     void save_PersistAnime_WhenSuccessful() {
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = animeRepository.save(animeToBeSaved);
         Assertions.assertThat(savedAnime).isNotNull();
         Assertions.assertThat(savedAnime.getId()).isNotNull();
@@ -33,7 +34,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("save: Update anime when successful")
     void save_UpdateAnime_WhenSuccessful() {
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = animeRepository.save(animeToBeSaved);
         savedAnime.setName("Boku no Hero");
         Anime updatedAnime = animeRepository.save(savedAnime);
@@ -55,7 +56,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("delete: Delete anime when successful")
     void delete_RemovesAnime_WhenSuccessful() {
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = animeRepository.save(animeToBeSaved);
 
         animeRepository.delete(savedAnime);
@@ -68,7 +69,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("findByName: returns a list of anime when successful")
     void findByName_findListOfAnime_WhenSuccessful() {
-        Anime animeToBeSaved = createAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime savedAnime = animeRepository.save(animeToBeSaved);
 
         List<Anime> animes = animeRepository.findByName("Nanatsu no Taizai");
@@ -81,17 +82,11 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("findByName: returns a empty list of anime if anime name not exists")
     void findByName_findListOfAnime_WhenAnimeNameIsNotFound() {
-        Anime animeToBeSaved = createAnime();
-        Anime savedAnime = animeRepository.save(animeToBeSaved);
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
+        animeRepository.save(animeToBeSaved);
 
         List<Anime> animes = animeRepository.findByName("Naruto");
         // verify if returns empty list
         Assertions.assertThat(animes).isEmpty();
-    }
-
-    private Anime createAnime() {
-        return Anime.builder()
-                .name("Nanatsu no Taizai")
-                .build();
     }
 }
