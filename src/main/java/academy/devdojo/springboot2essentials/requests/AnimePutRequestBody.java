@@ -1,10 +1,10 @@
 package academy.devdojo.springboot2essentials.requests;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
-@Getter
+@Builder
 public class AnimePutRequestBody {
     private Long id;
     private String name;
