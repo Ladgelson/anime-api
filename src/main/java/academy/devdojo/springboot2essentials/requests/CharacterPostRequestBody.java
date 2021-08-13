@@ -5,8 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AnimePostRequestBody {
-    private Long id;
+public class CharacterPostRequestBody {
     private String name;
+    private int age;
+    private Boolean isVillain;
+    private Long anime;
 }
-

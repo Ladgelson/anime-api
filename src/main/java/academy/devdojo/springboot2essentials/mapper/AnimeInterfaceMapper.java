@@ -1,8 +1,10 @@
 package academy.devdojo.springboot2essentials.mapper;
 
 import academy.devdojo.springboot2essentials.domain.Anime;
+import academy.devdojo.springboot2essentials.domain.Character;
 import academy.devdojo.springboot2essentials.requests.AnimePostRequestBody;
 import academy.devdojo.springboot2essentials.requests.AnimePutRequestBody;
+import academy.devdojo.springboot2essentials.requests.CharacterPostRequestBody;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -16,4 +18,6 @@ public interface AnimeInterfaceMapper {
 
     @Mapping(source = "name", target = "name")
     Anime putAnimeToAnime(AnimePutRequestBody anime);
+
+    Character postCharacterToCharacter(CharacterPostRequestBody character);
 }

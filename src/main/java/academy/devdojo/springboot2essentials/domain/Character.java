@@ -7,18 +7,25 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
-public class Anime {
+@Table(name = "anime_character")
+public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "The anime name cannot be empty")
     private String name;
+
+    private int age;
+
+    private Boolean isVillain;
+
+    @ManyToOne
+    private Anime anime;
 }
