@@ -19,11 +19,10 @@ public class CharacterController {
 
     private final CharacterService characterService;
 
-//    @GetMapping("/{id}/characters")
-//    public ResponseEntity<List<Character>> findAll(@PathVariable Long id,
-//                                                   @RequestParam(required = false) Boolean isVillain) {
-//        return ResponseEntity.ok(characterService.listAll(id));
-//    }
+    @GetMapping
+    public ResponseEntity<Page<Character>> findAll(@RequestParam(required = false) Boolean isVillain, Pageable pageable) {
+        return ResponseEntity.ok(characterService.listAll(pageable, isVillain));
+    }
 
 
 }

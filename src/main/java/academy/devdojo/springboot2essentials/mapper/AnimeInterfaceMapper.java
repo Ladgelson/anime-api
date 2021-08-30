@@ -19,5 +19,5 @@ public interface AnimeInterfaceMapper {
     @Mapping(source = "name", target = "name")
     Anime putAnimeToAnime(AnimePutRequestBody anime);
 
-    Character postCharacterToCharacter(CharacterPostRequestBody character);
+//    Character postCharacterToCharacter(CharacterPostRequestBody character);
 }

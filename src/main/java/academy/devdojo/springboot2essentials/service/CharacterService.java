@@ -21,8 +21,10 @@ public class CharacterService {
     private final CharacterRepository characterRepository;
     private final AnimeRepository animeRepository;
 
-    public List<Character> listAll(Long animeId) {
-        return characterRepository.findByAnimeId(animeId);
+    public Page<Character> listAll(Pageable pageable, Boolean isVillain) {
+        Optional<Boolean> villain = Optional.ofNullable(isVillain);
+        if(villain.isPresent()) return characterRepository.findCharactersByIsVillain(pageable, isVillain);
+        return characterRepository.findAll(pageable);
     }
 
     public List<Character> listByType(Long animeId, Boolean isVillain) {
