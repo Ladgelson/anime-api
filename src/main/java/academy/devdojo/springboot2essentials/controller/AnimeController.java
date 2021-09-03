@@ -60,27 +60,27 @@ public class AnimeController {
     }
 
     @GetMapping("/{id}/characters")
-    public ResponseEntity<List<Character>> list(@PathVariable Long id, @RequestParam(required = false) Boolean isVillain) {
+    public ResponseEntity<List<Character>> listCharacter(@PathVariable Long id, @RequestParam(required = false) Boolean isVillain) {
         return new ResponseEntity<>(characterService.listByType(id, isVillain), HttpStatus.OK);
     }
 
     @GetMapping("/{animeId}/characters/{characterId}")
-    public ResponseEntity<Character> findById(@PathVariable Long animeId, @PathVariable Long characterId) {
+    public ResponseEntity<Character> findCharacterById(@PathVariable Long animeId, @PathVariable Long characterId) {
         return new ResponseEntity<>(characterService.findById(characterId), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/characters")
-    public ResponseEntity<Character> save(@PathVariable Long id, @RequestBody Character character) {
+    public ResponseEntity<Character> saveCharacter(@PathVariable Long id, @RequestBody Character character) {
         return new ResponseEntity<>(characterService.save(id, character), HttpStatus.CREATED);
     }
 
     @PutMapping("/{animeId}/characters")
-    public ResponseEntity<Character> replace(@PathVariable Long animeId, @RequestBody Character character) {
+    public ResponseEntity<Character> replaceCharacter(@PathVariable Long animeId, @RequestBody Character character) {
         return new ResponseEntity<>(characterService.save(animeId, character), HttpStatus.OK);
     }
 
     @DeleteMapping("/{animeId}/characters/{characterId}")
-    public ResponseEntity<Void> delete(@PathVariable Long animeId, @PathVariable Long characterId) {
+    public ResponseEntity<Void> deleteCharacter(@PathVariable Long animeId, @PathVariable Long characterId) {
         characterService.delete(characterId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

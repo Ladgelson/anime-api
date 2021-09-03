@@ -1,12 +1,15 @@
 package academy.devdojo.springboot2essentials.controller;
 
 import academy.devdojo.springboot2essentials.domain.Anime;
+import academy.devdojo.springboot2essentials.domain.Character;
 import academy.devdojo.springboot2essentials.requests.AnimePostRequestBody;
 import academy.devdojo.springboot2essentials.requests.AnimePutRequestBody;
 import academy.devdojo.springboot2essentials.service.AnimeService;
+import academy.devdojo.springboot2essentials.service.CharacterService;
 import academy.devdojo.springboot2essentials.util.AnimeCreator;
 import academy.devdojo.springboot2essentials.util.AnimePostRequestBodyCreator;
 import academy.devdojo.springboot2essentials.util.AnimePutRequestBodyCreator;
+import academy.devdojo.springboot2essentials.util.CharacterCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,9 +37,14 @@ class AnimeControllerTest {
     @Mock
     private AnimeService animeServiceMock;
 
+    @Mock
+    private CharacterService characterServiceMock;
+
     @BeforeEach
     void setup() {
         PageImpl<Anime> animePage = new PageImpl<>(List.of(AnimeCreator.createValidAnime()));
+        List<Character> characterList = new ArrayList<>(
+                List.of(CharacterCreator.createValidCharacter("Escanor", AnimeCreator.createValidAnime())));
 
         // mocks the function listAll of anime service
         BDDMockito.when(animeServiceMock.listAll(ArgumentMatchers.any()))
@@ -63,6 +71,21 @@ class AnimeControllerTest {
         BDDMockito.doNothing()
                 .when(animeServiceMock)
                 .delete(ArgumentMatchers.anyLong());
+
+        // mocks the function listByType of character service
+        BDDMockito
+                .when(characterServiceMock.listByType(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+                .thenReturn(characterList);
+
+        // mocks the function findById of character service
+        BDDMockito
+                .when(characterServiceMock.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(CharacterCreator.createValidCharacter("Escanor", AnimeCreator.createValidAnime()));// mocks the function listCharacter of character service
+
+        // mocks the function save from character service
+        BDDMockito
+                .when(characterServiceMock.save(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+                .thenReturn(CharacterCreator.createValidCharacter("Escanor", AnimeCreator.createValidAnime()));
     }
 
     @Test
@@ -149,6 +172,71 @@ class AnimeControllerTest {
                 .isNotNull();
 
         Assertions.assertThat(entity.getStatusCode())
+                .isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("listCharacter: returns a list of characters when successful")
+    void listCharacter_ReturnsAListOfCharactersFromAnAnime_WhenSuccessful() {
+        Anime nanatsuNoTaizai = AnimeCreator.createValidAnime();
+        String escanor = CharacterCreator.createValidCharacter("Escanor", nanatsuNoTaizai).getName();
+
+        List<Character> characters = animeController.listCharacter(nanatsuNoTaizai.getId(), null).getBody();
+
+        Assertions.assertThat(characters).isNotNull();
+        Assertions.assertThat(characters.get(0).getName()).isEqualTo(escanor);
+    }
+
+    @Test
+    @DisplayName("findCharacterById: returns a character when successful")
+    void findCharacterById_ReturnsCharactersFromAnAnime_WhenSuccessful() {
+        Anime nanatsuNoTaizai = AnimeCreator.createValidAnime();
+        Character escanor = CharacterCreator.createValidCharacter("Escanor", nanatsuNoTaizai);
+
+        Character character = animeController.findCharacterById(nanatsuNoTaizai.getId(), escanor.getId()).getBody();
+
+        Assertions.assertThat(character).isNotNull();
+        Assertions.assertThat(character.getName()).isEqualTo(escanor.getName());
+        Assertions.assertThat(character.getId()).isEqualTo(escanor.getId());
+    }
+
+    @Test
+    @DisplayName("saveCharacter: saves a character when successful")
+    void saveCharacter_PersistsACharacter_WhenSuccessful() {
+        Anime nanatsuNoTaizai = AnimeCreator.createValidAnime();
+        Character escanor = CharacterCreator.createValidCharacter("Escanor", nanatsuNoTaizai);
+
+        Character characterSaved = animeController.saveCharacter(nanatsuNoTaizai.getId(), escanor).getBody();
+
+        Assertions.assertThat(characterSaved).isNotNull();
+        Assertions.assertThat(characterSaved.getName()).isEqualTo(escanor.getName());
+        Assertions.assertThat(characterSaved.getId()).isEqualTo(escanor.getId());
+    }
+
+    @Test
+    @DisplayName("replaceCharacter: update a character when successful")
+    void replaceCharacter_updateCharacter_WhenSuccessful() {
+        Anime nanatsuNoTaizai = AnimeCreator.createValidAnime();
+        Character escanor = CharacterCreator.createValidUpdatedAnime("Escanor", nanatsuNoTaizai);
+
+        Character characterSaved = animeController.replaceCharacter(nanatsuNoTaizai.getId(), escanor).getBody();
+
+        Assertions.assertThat(characterSaved).isNotNull();
+        Assertions.assertThat(characterSaved.getName()).isEqualTo(escanor.getName());
+        Assertions.assertThat(characterSaved.getId()).isEqualTo(escanor.getId());
+    }
+
+    @Test
+    @DisplayName("deleteCharacter: delete a character when successful")
+    void deleteCharacter_deleteCharacter_WhenSuccessful() {
+        Anime nanatsuNoTaizai = AnimeCreator.createValidAnime();
+        Character escanor = CharacterCreator.createValidUpdatedAnime("Escanor", nanatsuNoTaizai);
+
+        ResponseEntity<Void> req = animeController.deleteCharacter(nanatsuNoTaizai.getId(), escanor.getId());
+
+        Assertions.assertThat(req).isNotNull();
+
+        Assertions.assertThat(req.getStatusCode())
                 .isEqualTo(HttpStatus.NO_CONTENT);
     }
 }
