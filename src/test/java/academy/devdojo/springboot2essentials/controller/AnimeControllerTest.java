@@ -204,13 +204,12 @@ class AnimeControllerTest {
     @DisplayName("saveCharacter: saves a character when successful")
     void saveCharacter_PersistsACharacter_WhenSuccessful() {
         Anime nanatsuNoTaizai = AnimeCreator.createValidAnime();
-        Character escanor = CharacterCreator.createValidCharacter("Escanor", nanatsuNoTaizai);
+        Character escanor = CharacterCreator.createCharacterToBeSaved("Escanor", nanatsuNoTaizai);
 
         Character characterSaved = animeController.saveCharacter(nanatsuNoTaizai.getId(), escanor).getBody();
 
         Assertions.assertThat(characterSaved).isNotNull();
         Assertions.assertThat(characterSaved.getName()).isEqualTo(escanor.getName());
-        Assertions.assertThat(characterSaved.getId()).isEqualTo(escanor.getId());
     }
 
     @Test
